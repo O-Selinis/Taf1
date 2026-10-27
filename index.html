@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F0F0F">
+<meta name="description" content="Plano detalhado de musculação, corrida, natação e monitoramento diário de alimentação, água e sono. Dados privados no aparelho e backup JSON.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png"><link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>Meu TAF e Musculação</title>
+<link rel="stylesheet" href="./style.css">
+<script src="./plan.js" defer></script><script src="./app.js" defer></script>
+<script src="./splash.js" defer></script>
+</head>
+<body>
+<div id="startupSplash" class="startup-splash" aria-label="Iniciando Meu TAF e Musculação" role="status">
+  <div class="splash-inner">
+    <img class="splash-wolf" src="./icons/wolf-splash.png" alt="" width="190" height="190">
+    <div class="splash-name">MEU <span>TAF</span></div>
+    <div class="splash-subtitle">E MUSCULAÇÃO</div>
+    <div class="splash-meter" aria-hidden="true"><span></span></div>
+  </div>
+</div>
+<header class="sitehead"><div class="headinner"><div class="brand"><div class="brandmark"><img src="./icons/icon-192.png" alt="Lobo vermelho, símbolo do Meu TAF"></div><div><div class="eyebrow">ACOMPANHAMENTO PESSOAL</div><h1>Meu TAF <span>& Musculação</span></h1><p>Força, hipertrofia e saúde em um só lugar.</p></div></div><button id="install" class="outline light" hidden>Instalar</button></div></header>
+<nav id="nav" aria-label="Navegação principal">
+<button class="active" data-tab="inicio"><span class="navicon">⌂</span>Início</button>
+<button data-tab="plano"><span class="navicon">▦</span>Plano</button>
+<button data-tab="registrar"><span class="navicon">＋</span>Registrar</button>
+<button data-tab="bemestar"><span class="navicon">♥</span>Bem-estar</button>
+<button data-tab="historico"><span class="navicon">◷</span>Histórico</button>
+<button data-tab="evolucao"><span class="navicon">↗</span>Evolução</button>
+<button data-tab="backup"><span class="navicon">⇩</span>Backup</button>
+</nav>
+<main>
+<section id="inicio" class="tab active" aria-label="Página inicial">
+<div class="sectiontop"><div><div class="eyebrow">VISÃO GERAL</div><h2>Seu acompanhamento</h2></div><span id="todayLabel" class="subtle"></span></div>
+<div class="metricgrid" id="dashboardMetrics"></div>
+<div class="twocol">
+<div class="panel"><div class="panelhead"><h3>Treinos de hoje</h3><button data-go="plano" class="linkbtn">Ver plano →</button></div><div id="todayWorkouts"></div></div>
+<div class="panel"><div class="panelhead"><h3>Hábitos do dia</h3><button data-go="bemestar" class="linkbtn">Preencher →</button></div><div id="todayWellness"></div></div>
+</div>
+<div class="panel"><div class="panelhead"><h3>Referências do último TAF</h3><span class="subtle">26–27/10/2026</span></div><div class="tafgrid"><div><small>Corrida 2.400 m</small><strong>11:55</strong></div><div><small>Natação 100 m</small><strong>1:48</strong></div><div><small>Barra fixa</small><strong>16</strong></div><div><small>Flexão convencional</small><strong>50</strong></div></div><p class="subtle small">Esses valores são referências informadas por você, não registros lançados automaticamente no histórico. Para acompanhar tendências, lance seus testes em Registrar.</p></div>
+<div class="notice"><strong>Cuidados e recuperação:</strong> após o TAF, retome a carga gradualmente. Se a pontada próxima às costelas voltar durante a corrida, diminua ou interrompa o esforço. Como foi recorrente, procure avaliação clínica antes de novos testes máximos.</div>
+</section>
+<section id="plano" class="tab" aria-label="Plano detalhado">
+<div class="sectiontop"><div><div class="eyebrow">TREINAMENTO</div><h2>Seu plano, exercício por exercício</h2></div></div>
+<div class="panel setup"><label>Início da semana 1 <input type="date" id="cycleStart"></label><div class="setupinfo"><strong id="phaseTitle">Semana 1 — Adaptação</strong><p class="subtle" id="phaseDescription"></p></div><button class="secondary" id="saveStart">Salvar início</button></div>
+<div class="weekdaybar" id="weekdaybar" aria-label="Selecionar dia da semana"></div>
+<div id="dayPlan"></div>
+<div class="panel"><h3>Como progredir ao longo de 12 semanas</h3><div id="phaseGuide"></div></div>
+</section>
+<section id="registrar" class="tab" aria-label="Registro de exercícios">
+<div class="sectiontop"><div><div class="eyebrow">CADERNO DE TREINO</div><h2>Registrar exercício ou atividade</h2></div></div>
+<div class="panel"><p class="subtle">Salve um registro por exercício ou atividade. Na aba Plano, toque em <strong>Registrar</strong> para preencher automaticamente o nome e a modalidade. Informe as repetições reais, não somente as planejadas.</p>
+<form id="workoutForm"><div class="formgrid">
+<label>Data <input type="date" name="date" required></label>
+<label>Modalidade <select name="modality" id="modality"><option>Musculação</option><option>Corrida</option><option>Natação</option><option>Calistenia/TAF</option><option>Mobilidade</option><option>Outro</option></select></label>
+<label class="wide">Exercício / atividade <input name="exercise" id="exerciseInput" list="exerciseList" required maxlength="120" placeholder="Ex.: Supino na estação"><datalist id="exerciseList"></datalist></label>
+<label>Séries realizadas <input type="number" name="sets" min="0" max="50" step="1" placeholder="Ex.: 3"></label>
+<label>Repetições reais por série <input name="reps" maxlength="120" placeholder="Ex.: 10, 10, 9"></label>
+<label>Carga (kg) <input type="number" name="weight" min="0" max="1000" step="0.25" placeholder="Ex.: 35"></label>
+<label>Carga por série (kg), opcional <input name="weights" maxlength="120" placeholder="Ex.: 30, 32, 32"></label>
+<label>Distância (metros) <input type="number" name="distance" min="0" max="1000000" step="1" placeholder="Ex.: 2400"></label>
+<label>Tempo (mm:ss ou hh:mm:ss) <input name="duration" placeholder="Ex.: 11:55"></label>
+<label>Esforço percebido (0–10) <input type="number" name="rpe" min="0" max="10" step="1" placeholder="Ex.: 7"></label>
+<label>Repetições de reserva (RIR) <input type="number" name="rir" min="0" max="10" step="1" placeholder="Ex.: 2"></label>
+</div><label>Observações <textarea name="notes" rows="3" maxlength="3000" placeholder="Técnica, descanso, sintomas, adaptações e recuperação..."></textarea></label>
+<div class="actions"><button class="primary" type="submit" id="saveWorkout">Salvar exercício</button><button class="secondary" type="button" id="cancelEdit" hidden>Cancelar edição</button></div><p id="formStatus" class="status" role="status"></p>
+</form></div>
+<div class="panel"><h3>Como preencher sem dúvidas</h3><div class="helpgrid"><div><strong>Repetições</strong><p>Registre as séries separadas por vírgula: <em>8, 8, 7</em>. Se todas forem iguais, pode escrever somente <em>8</em> e informar três séries.</p></div><div><strong>RIR</strong><p>É o número aproximado de repetições que ainda conseguiria fazer com boa técnica. RIR 2 = encerraria a série podendo fazer mais duas.</p></div><div><strong>Carga</strong><p>Use o peso selecionado na máquina; se variar entre séries, detalhe em “Carga por série”. Em exercícios com peso corporal, deixe em branco ou registre somente a carga adicional.</p></div><div><strong>Corrida e natação</strong><p>Registre a distância total e o tempo, por exemplo <em>2400 m</em> e <em>11:55</em>; nos intervalados, descreva as repetições nas observações.</p></div></div></div>
+</section>
+<section id="bemestar" class="tab" aria-label="Alimentação, hidratação e sono">
+<div class="sectiontop"><div><div class="eyebrow">ROTINA DIÁRIA</div><h2>Alimentação, hidratação e sono</h2></div><label class="dateinline">Data <input type="date" id="wellDate"></label></div>
+<div class="wellgrid">
+<div class="panel"><div class="panelhead"><h3>Hidratação</h3><span class="tag" id="waterPercent"></span></div><div class="waterreading"><strong id="waterTotal">0 ml</strong><span class="subtle" id="waterGoalLabel">Meta: 2.500 ml</span></div><div class="track"><div class="fill water" id="waterProgress"></div></div><div class="quickwater"><button class="secondary" data-water="150">+150 ml</button><button class="secondary" data-water="250">+250 ml</button><button class="secondary" data-water="500">+500 ml</button><button class="secondary" data-water="-250">−250 ml</button></div><div class="formgrid"><label>Total do dia (ml) <input type="number" id="waterManual" min="0" max="20000" step="50"></label><label>Meta pessoal (ml) <input type="number" id="waterGoal" min="250" max="10000" step="50"></label></div><p class="subtle small">Meta inicial ajustável de 2.500 ml, não é uma obrigação clínica. Em dias quentes e de treino, as necessidades variam. Beba de acordo com sua sede e condições.</p></div>
+<div class="panel"><h3>Sono e recuperação</h3><div class="formgrid"><label>Hora em que deitou <input type="time" id="sleepStart"></label><label>Hora em que acordou <input type="time" id="sleepEnd"></label><label>Horas dormidas (aprox.) <input type="number" id="sleepHours" min="0" max="24" step="0.1" placeholder="Ex.: 7.5"></label><label>Qualidade percebida <select id="sleepQuality"><option value="">Não informado</option><option value="1">1 — Muito ruim</option><option value="2">2 — Ruim</option><option value="3">3 — Regular</option><option value="4">4 — Boa</option><option value="5">5 — Excelente</option></select></label></div><p class="subtle small">Se preencher os dois horários, o aplicativo sugere a duração atravessando a meia-noite. Ajuste as horas manualmente para descontar períodos acordado.</p></div>
+</div>
+<div class="panel"><div class="panelhead"><h3>Diário alimentar</h3><span class="tag">4 refeições</span></div><p class="subtle">Descreva o que realmente comeu, com horário e quantidade aproximada se desejar. Não há contagem automática de calorias.</p><div class="mealsgrid"><div class="meal"><strong>☀ Café da manhã</strong><label>Horário <input type="time" id="mealBreakfastTime"></label><label>Alimentos e quantidades <textarea id="mealBreakfast" rows="3" maxlength="1500" placeholder="Ex.: pão com queijo e frango desfiado + suco de acerola"></textarea></label></div><div class="meal"><strong>◉ Almoço</strong><label>Horário <input type="time" id="mealLunchTime"></label><label>Alimentos e quantidades <textarea id="mealLunch" rows="3" maxlength="1500" placeholder="Ex.: arroz, feijão, frango e salada"></textarea></label></div><div class="meal"><strong>◕ Lanche</strong><label>Horário <input type="time" id="mealSnackTime"></label><label>Alimentos e quantidades <textarea id="mealSnack" rows="3" maxlength="1500" placeholder="Ex.: fruta, iogurte, sanduíche..."></textarea></label></div><div class="meal"><strong>☾ Jantar</strong><label>Horário <input type="time" id="mealDinnerTime"></label><label>Alimentos e quantidades <textarea id="mealDinner" rows="3" maxlength="1500" placeholder="Ex.: proteína, vegetais e carboidrato"></textarea></label></div></div></div>
+<div class="panel"><h3>Sintomas e observações</h3><div class="formgrid"><label>Desconforto durante exercícios <select id="symptoms"><option value="">Não informado</option><option value="Não">Não</option><option value="Leve">Sim, leve</option><option value="Moderado">Sim, moderado</option><option value="Forte">Sim, forte</option></select></label><label>Local do desconforto <input id="symptomLocation" maxlength="140" placeholder="Ex.: abaixo da costela direita"></label></div><label>Observações do dia <textarea id="wellNotes" rows="3" maxlength="3000" placeholder="Fome, energia, recuperação, refeições diferentes, contexto do sono..."></textarea></label><div class="actions"><button class="primary" id="saveWellness">Salvar acompanhamento do dia</button><button class="secondary" id="todayWellDate">Voltar para hoje</button></div><p class="status" id="wellStatus" role="status"></p></div>
+</section>
+<section id="historico" class="tab" aria-label="Histórico de registros">
+<div class="sectiontop"><div><div class="eyebrow">REGISTROS</div><h2>Histórico detalhado</h2></div></div><div class="panel"><div class="panelhead"><h3>Treinos registrados</h3><select id="filter" aria-label="Filtrar por modalidade"><option value="">Todas as modalidades</option><option>Musculação</option><option>Corrida</option><option>Natação</option><option>Calistenia/TAF</option><option>Mobilidade</option><option>Outro</option></select></div><div id="history"></div></div><div class="panel"><h3>Diário de bem-estar (últimos registros)</h3><div id="wellHistory"></div></div></section>
+<section id="evolucao" class="tab" aria-label="Evolução do treinamento">
+<div class="sectiontop"><div><div class="eyebrow">ANÁLISE</div><h2>Sua evolução</h2></div></div><div id="progressMetrics" class="metricgrid"></div>
+<div class="twocol"><div class="panel"><h3>Volume de musculação</h3><p class="subtle small">Estimativa em kg-repetições por semana, somando carga × repetições realizadas. Não compara diretamente máquinas e exercícios diferentes.</p><div id="volumeChart"></div></div><div class="panel"><h3>Hábitos nos últimos 7 dias</h3><div id="habitStats"></div></div></div>
+<div class="panel"><div class="panelhead"><h3>Progressão por exercício</h3><select id="exerciseProgress" aria-label="Escolher exercício para acompanhar"></select></div><div id="exerciseTrend"></div></div>
+<div class="panel"><h3>Melhores tempos</h3><div id="bests"></div><p class="subtle small">As referências do TAF de outubro não são consideradas automaticamente nos gráficos; somente registros salvos entram nos cálculos.</p></div>
+</section>
+<section id="backup" class="tab" aria-label="Backup e atualização">
+<div class="sectiontop"><div><div class="eyebrow">SEGURANÇA</div><h2>Dados e backup</h2></div></div>
+<div class="panel"><h3>Exporte seus registros antes de atualizar</h3><p>Os registros de treino e bem-estar ficam no armazenamento local deste aplicativo e não são enviados automaticamente. Ao atualizar os arquivos no GitHub, seus dados devem permanecer se você usar o <strong>mesmo endereço</strong> e não limpar os dados do site.</p><div class="actions"><button class="primary" id="export">Exportar JSON completo</button><label class="filebutton">Importar JSON<input type="file" id="import" accept="application/json,.json" hidden></label></div><p class="status" id="backupStatus" role="status"></p><p class="subtle small">Compatível com backups da versão anterior (v1). A importação combina registros sem duplicar IDs. Dados diários existentes não são sobrescritos.</p></div>
+<div class="panel"><h3>Compartilhar comigo semanalmente</h3><ol><li>Abra Backup → <strong>Exportar JSON completo</strong>.</li><li>Salve o arquivo no celular.</li><li>Anexe o arquivo nesta conversa no ChatGPT.</li><li>Peça: <em>“Analise meus registros desta semana e ajuste as próximas sessões.”</em></li></ol><div class="notice small">O JSON inclui informações pessoais sobre alimentação, sono e treinos. Compartilhe apenas se estiver confortável; não envie seu backup ao repositório público do GitHub.</div></div>
+<div class="panel"><h3>Atualizações do aplicativo</h3><p>Para instalar esta versão, substitua os arquivos antigos no GitHub e mantenha os nomes originais, o repositório e o endereço publicados. Depois, abra o aplicativo com internet e recarregue para buscar a versão nova.</p><button class="secondary" id="checkUpdate">Verificar atualização</button><p class="subtle small" id="versionLabel">Versão 3.0 • nova identidade visual e abertura animada.</p></div>
+</section>
+</main><footer>Meu TAF e Musculação · v3.0 · dados armazenados no dispositivo</footer>
+</body></html>
